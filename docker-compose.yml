@@ -18,6 +18,14 @@ services:
     volumes:
       - ./dist/:/var/www/html/
       - ./logs/php.log:/var/log/fpm-php.www.log
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/html --email seu_email@example.com --agree-tos -d seu_dominio.com
+    depends_on:
+      - nginx # Certbot depende do Nginx para iniciar primeiro
+
 networks:
   internal:
     driver: bridge
