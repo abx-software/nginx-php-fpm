@@ -6,11 +6,13 @@ services:
       dockerfile: nginx/Dockerfile
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - internal
     volumes:
       - ./dist/:/var/www/html/
       - ./logs/nginx:/var/log/nginx/
+      - /etc/letsencrypt:/etc/letsencrypt
   php:
     image: php:fpm-alpine
     networks:
@@ -21,8 +23,9 @@ services:
   certbot:
     image: certbot/certbot
     volumes:
+      - ./dist/:/var/www/html/
       - /etc/letsencrypt:/etc/letsencrypt
-    command: certonly --webroot --webroot-path=/var/www/html --email seu_email@example.com --agree-tos -d seu_dominio.com
+    command: certonly --webroot --webroot-path=/var/www/html --email email@domain.com--agree-tos -d domain.me
     depends_on:
       - nginx # Certbot depende do Nginx para iniciar primeiro
 
